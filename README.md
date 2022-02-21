@@ -5,4 +5,4 @@
 # are a lot of gaps. For metal for example it only contains System of a Down, and linkin park which isn't even really considered metal. The whole playlist contains 
 # 253 songs. Interesting songs in this playlist I think are Breezeblocks by Alt-j to see the indie rock music, Alive by Pearl Jam which represents the 90's grunge scene. Also there is Sympathy for the devil by the Rolling Stones to represent end 60's begin 70's. 
 # First plot
-# I haven't shown a lot in my first plot due to issues with installing, I set the loudness on the Y axis and the energy on the X axis, then I made the key color dependent.
+# I haven't shown a lot in my first plot due to issues with installing, I set the loudness on the Y axis and the energy on the X axis, then I made the key color dependent. 
