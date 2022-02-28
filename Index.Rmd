@@ -8,29 +8,93 @@ output:
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
+library(tidyverse)
+library(spotifyr)
+library(compmus)
 ```
 
-Column {data-width=650}
------------------------------------------------------------------------
-
-### Chart A
-
-```{r}
-
-```
 
 Column {data-width=350}
 -----------------------------------------------------------------------
+### Introduction
+One of the genres I am very interested in is the making of music for films. So for this corpus I have chosen to compare two of the greatest film music composers of all time: John Williams and Hans Zimmer. John Williams is the biggest film music composer of the last decades of the 20th century. His music was used in films like Star Wars, Indiana Jones, Superman, Jaws, Jurassic Park, E.T. the Extra-Terrestrial, Schindler's List, Home Alone and Harry Potter. Hans Zimmer is the biggest composer of the 21st century. His repertoire contains Gladiator, Pearl Harbor, Pirates of the Caribbean, The Last Samurai, Madagascar, The Da Vinci Code, Kung Fu Panda, The Dark Knight-trilogie, Sherlock Holmes, Inception, Man of Steel, Interstellar, Dunkirk and The Lion King. The aim of this project is to compare these two great composers and to see if they have similarities or if they are very different. 
+For this I will use the "This is" of both artist on spotify. The playlist of John Williams contains 50 songs and the playlist of Hans Zimmer contains 70 songs. 
+```{r}
 
-### Chart B
+```
+
+
+### Chromagram of star wars main theme
+
+```{r}
+star_wars <-
+  get_tidy_audio_analysis("7a9UUo3zfID7Ik2fTQjRLi") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+star_wars %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+> Chromagram of the main theme of Star Wars
+
+*** 
+
+The chromagram is as can be expected from the star wars main theme. The song is very explosive and energetic with a lot of instruments. This makes the chromagram hard to read. 
+
+### Chromagram of main theme Interstellar
+
+```{r}
+cornfield_chase <-
+  get_tidy_audio_analysis("18z7tK7u9DcDw85LYRR5Fe") %>%
+  select(segments) %>%
+  unnest(segments) %>%
+  select(start, duration, pitches)
+
+cornfield_chase %>%
+  mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
+  compmus_gather_chroma() %>% 
+  ggplot(
+    aes(
+      x = start + duration / 2,
+      width = duration,
+      y = pitch_class,
+      fill = value
+    )
+  ) +
+  geom_tile() +
+  labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
+  theme_minimal() +
+  scale_fill_viridis_c()
+```
+
+> chromatogram of the cornfield chase from Interstellar
+
+*** 
+
+The chromagram of cornfield chase is a lot more readable than the chromagram of the star wars theme. This is because there are a lot more pauses and it is mainly one repeating melody/ sound. For example the piano at 34 seconds is clearly seen in the E. 
+
+
+### Conclusion
 
 ```{r}
 
 ```
 
-### Chart C
+*** 
 
-```{r}
-
-```
-
+The main difference between the two chromagrams is the readability. The Star Wars theme is so bombastic and this makes the chromagram to hard to read. On the other side of the spectrum there is the calm and slowly building cornfield chase which is very readable. 
