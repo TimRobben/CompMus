@@ -93,6 +93,7 @@ The main difference between the two chromagrams is the readability. The Star War
 ### Random forest plot
 
 ![Random forest plot of movies](/home/tim/Documents/GitHub/CompMus/images/cluster.png)
+![Random forest plot of movies](/home/tim/Documents/KIjaar2/CompMus/CompMus/images/cluster.png)
 
 > Plot of random forest feature set for different movies
 
