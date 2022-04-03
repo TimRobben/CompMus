@@ -1,27 +1,36 @@
 ---
 title: "Playlist analysis"
-output: 
+author: "Tim Robben"
+output:
   flexdashboard::flex_dashboard:
     storyboard: true
     theme: "yeti"
+
 ---
 
 ```{r setup, include=FALSE}
 library(flexdashboard)
 library(tidyverse)
 library(spotifyr)
+library(tidymodels)
+library(ggdendro)
+library(heatmaply)
+library(ranger)
+library(dplyr)
 library(compmus)
+library(ggplot2)
+library(gridExtra)
 ```
 
 
-Column {data-width=350}
------------------------------------------------------------------------
+
 ### Introduction
-One of the genres I am very interested in is the making of music for films. So for this corpus I have chosen to compare two of the greatest film music composers of all time: John Williams and Hans Zimmer. John Williams is the biggest film music composer of the last decades of the 20th century. His music was used in films like Star Wars, Indiana Jones, Superman, Jaws, Jurassic Park, E.T. the Extra-Terrestrial, Schindler's List, Home Alone and Harry Potter. Hans Zimmer is the biggest composer of the 21st century. His repertoire contains Gladiator, Pearl Harbor, Pirates of the Caribbean, The Last Samurai, Madagascar, The Da Vinci Code, Kung Fu Panda, The Dark Knight-trilogie, Sherlock Holmes, Inception, Man of Steel, Interstellar, Dunkirk and The Lion King. The aim of this project is to compare these two great composers and to see if they have similarities or if they are very different. 
-For this I will use the "This is" of both artist on spotify. The playlist of John Williams contains 50 songs and the playlist of Hans Zimmer contains 70 songs. 
+One of the genres I am very interested in is the making of music for films. So for this corpus I have chosen to compare two of the greatest film music composers of all time: John Williams and Hans Zimmer. John Williams is the biggest film music composer of the last decades of the 20th century. His music was used in films like Star Wars, Indiana Jones, Superman, Jaws, Jurassic Park, E.T. the Extra-Terrestrial, Schindler's List, Home Alone and Harry Potter. Hans Zimmer is the biggest composer of the 21st century. His repertoire contains Gladiator, Pearl Harbor, Pirates of the Caribbean, The Last Samurai, Madagascar, The Da Vinci Code, Kung Fu Panda, The Dark Knight-trilogie, Sherlock Holmes, Inception, Man of Steel, Interstellar, Dunkirk and The Lion King. The aim of this project is to compare these two great composers and to see if they have similarities or if they are very different.
+For this I will use the "This is" of both artist on spotify. The playlist of John Williams contains 50 songs and the playlist of Hans Zimmer contains 70 songs.
 ```{r}
 
 ```
+
 
 
 ### Chromagram of star wars main theme
@@ -33,9 +42,9 @@ star_wars <-
   unnest(segments) %>%
   select(start, duration, pitches)
 
-star_wars %>%
+p1<-star_wars %>%
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
-  compmus_gather_chroma() %>% 
+  compmus_gather_chroma() %>%
   ggplot(
     aes(
       x = start + duration / 2,
@@ -48,26 +57,16 @@ star_wars %>%
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
   scale_fill_viridis_c()
-```
 
-> Chromagram of the main theme of Star Wars
-
-*** 
-
-The chromagram is as can be expected from the star wars main theme. The song is very explosive and energetic with a lot of instruments. This makes the chromagram hard to read. 
-
-### Chromagram of main theme Interstellar
-
-```{r}
 cornfield_chase <-
   get_tidy_audio_analysis("18z7tK7u9DcDw85LYRR5Fe") %>%
   select(segments) %>%
   unnest(segments) %>%
   select(start, duration, pitches)
 
-cornfield_chase %>%
+p2<-cornfield_chase %>%
   mutate(pitches = map(pitches, compmus_normalise, "euclidean")) %>%
-  compmus_gather_chroma() %>% 
+  compmus_gather_chroma() %>%
   ggplot(
     aes(
       x = start + duration / 2,
@@ -80,13 +79,26 @@ cornfield_chase %>%
   labs(x = "Time (s)", y = NULL, fill = "Magnitude") +
   theme_minimal() +
   scale_fill_viridis_c()
+subplot(p1,p2)
 ```
 
-> chromatogram of the cornfield chase from Interstellar
+> Chromagram of the main theme of Star Wars (left) and chromagram of the main theme of Interstellar (right)
 
-*** 
+***
 
-The chromagram of cornfield chase is a lot more readable than the chromagram of the star wars theme. This is because there are a lot more pauses and it is mainly one repeating melody/ sound. For example the piano at 34 seconds is clearly seen in the E. 
+The chromagram is as can be expected from the star wars main theme. The song is very explosive and energetic with a lot of instruments. This makes the chromagram hard to read.
+The chromagram of cornfield chase is a lot more readable than the chromagram of the star wars theme. This is because there are a lot more pauses and it is mainly one repeating melody/ sound. For example the piano at 34 seconds is clearly seen in the E.
+The main difference between the two chromagrams is the readability. The Star Wars theme is so bombastic and this makes the chromagram to hard to read. On the other side of the spectrum there is the calm and slowly building cornfield chase which is very readable.
+
+### Random forest plot
+
+![Random forest plot of movies](/home/tim/Documents/GitHub/CompMus/images/cluster.png)
+
+> Plot of random forest feature set for different movies
+
+***
+
+The random forest plot shows a couple of the most well-known movies by John Williams and Hans Zimmer. The original movie soundtrack is used for each movie. This is because the This is playlists only have a max of around five tracks with some movies only having one or two. Taking the full soundtrack makes for a plot which says something. The movies chosen are some of the most well-known movies made, so it is interesting to see the difference between them and the composers. The main thing seen in the graph is that the music by John Williams is closer clustered together than that of Hans Zimmer. For example, Interstellar is spread out in a rather large space, just as Dune is, but Indiana Jones and Star Wars are in a similarly smaller space.  One explanation could be that John Williams is more of a theme composer. Think about Star Wars or Indiana Jones. Most people know the theme songs immediately by just mentioning the names. For a movie like Dune or Interstellar there is less of a one theme. This could explain why the tracks are less centered around each other. Looking at the energy not a lot can be seen. On average the John Williams music has more energy than the Hans Zimmer music, but this is not always the case for all movies, for example Harry Potter is also lower in energy. This is connected to the types of movies used. Where Indiana Jones and Star Wars are mainly action movie with exciting energetic music, Inception or Interstellar are a lot calmer type of action movie with a lot more build up. For example the track Mountains from Interstellar has an intro of 1.5 minutes of just clicking before the rest of the instruments come in.   
 
 
 ### Conclusion
@@ -94,7 +106,3 @@ The chromagram of cornfield chase is a lot more readable than the chromagram of 
 ```{r}
 
 ```
-
-*** 
-
-The main difference between the two chromagrams is the readability. The Star Wars theme is so bombastic and this makes the chromagram to hard to read. On the other side of the spectrum there is the calm and slowly building cornfield chase which is very readable. 
