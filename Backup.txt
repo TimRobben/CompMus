@@ -106,3 +106,23 @@ hans_john_features %>%
     colour = "Playlist"
   )
 ```
+hans_loud <- hans %>%
+  ggplot(aes(x = energy, y = loudness)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, NA)) +
+
+  ggtitle("Loudness Hans Zimmer") +
+  labs(x = "Energy", y = "Loudness") +
+  theme_minimal()
+
+john_loud <- john %>%
+  ggplot(aes(x = energy, y = loudness)) +
+  geom_point() +
+  geom_smooth() +
+  scale_x_continuous(expand = c(0, 0), limits = c(0, NA)) +
+  ggtitle("Loudness John Williams") +
+  labs(x = "Energy", y = "Loudness") +
+  theme_minimal()
+
+subplot(hans_loud, john_loud,titleY = TRUE, shareX = TRUE)
