@@ -215,7 +215,6 @@ On average the John Williams music has more energy than the Hans Zimmer music, b
 
 ```
 
-
 In conclusion a couple of interesting facts have come to light. Least of which are the track level features. It was found that, against expectation, the music by Hans Zimmer is more energetic than that of John Williams. This energy also seems to play a part in the loudness of a song, but after a an energy of 0.6 the loudness seems to flatten. This is the case for Hans Zimmer, John Williams doesn't have any songs with an energy exceeding 0.5 energy, this can be linked to the difference in track in the This Is playlists. 
 
 The comparison of the two songs gave an interesting result as the Interstellar main theme was a lot more readable than the Star Wars main theme was in the chromagrams. The self similarity matrices were interesting for both songs. The Star Wars song was very readable, seeing when it slowed down just for it to explode again. The Interstellar song looked very nice, with a lot of checkered patterns in the pitches, making different parts very similar to itself.  
